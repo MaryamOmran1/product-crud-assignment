@@ -1,67 +1,48 @@
 package com.example.product_crud_assignment;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
 
-    private List<Product> products = new ArrayList<>();
+    private final ProductService productService;
 
-    // Helper method to find the index of a product by ID
-    private int getProductIndex(String id) {
-        for (Product product : products) {
-            if (product.getId().equals(id)) {
-                return products.indexOf(product);
-            }
-        }
-        // Not found
-        return -1;
+    @Autowired // Inject ProductService via constructor
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
-    // Implement the method to add a new product
+    // Create
     @PostMapping
     public Product createProduct(@RequestBody Product product) {
-        products.add(product);
-        return product; // Return the added product
+        return productService.createProduct(product);
     }
 
-    // Implement the method to get all products
+    // Read all
     @GetMapping
     public List<Product> getAllProducts() {
-        return products; // Return the list of products
+        return productService.getAllProducts();
     }
 
-    // Implement the method to get a product by ID
+    // Read by ID
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable String id) {
-        int index = getProductIndex(id);
-        if (index != -1) {
-            return products.get(index); // Return the found product
-        }
-        return null; // Return null if not found
+        return productService.getProductById(id);
     }
 
-    // Implement the method to update a product
+    // Update
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable String id, @RequestBody Product updatedProduct) {
-        int index = getProductIndex(id);
-        if (index != -1) {
-            products.set(index, updatedProduct); // Update the product
-            return updatedProduct; // Return the updated product
-        }
-        return null; // Return null if not found
+        return productService.updateProduct(id, updatedProduct);
     }
 
-    // Implement the method to delete a product
+    // Delete
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable String id) {
-        int index = getProductIndex(id);
-        if (index != -1) {
-            products.remove(index); // Remove the product
-        }
+        productService.deleteProduct(id);
     }
 }

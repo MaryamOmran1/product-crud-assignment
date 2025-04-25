@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-ProductCrudAssignmentApplication<product-crud-assignment>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.example.product_crud_assignment.ProductCrudAssignmentApplication",
+      "projectName": "product-crud-assignment",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

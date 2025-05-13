@@ -1,11 +1,11 @@
 package com.example.product_crud_assignment;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/products")
@@ -14,29 +14,31 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping
-    public ResponseEntity<Product> create(@RequestBody Product product) {
-        return new ResponseEntity<>(productService.createProduct(product), HttpStatus.CREATED);
+    @GetMapping
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
     }
 
-    @GetMapping
-    public ResponseEntity<List<Product>> getAll() {
-        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')") // Add the products by the admin only
+    public Product addProduct(@RequestBody Product product) {
+        return productService.createProduct(product);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getOne(@PathVariable Long id) {
-        return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
-    }
+public Product getProduct(@PathVariable Long id) {
+    return productService.getProductById(id);
+}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
-        return new ResponseEntity<>(productService.updateProduct(id, product), HttpStatus.OK);
-    }
+@PutMapping("/{id}")
+@PreAuthorize("hasRole('ADMIN')")
+public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
+    return productService.updateProduct(id, product);
+}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        productService.deleteProduct(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+@DeleteMapping("/{id}")
+@PreAuthorize("hasRole('ADMIN')")
+public void deleteProduct(@PathVariable Long id) {
+    productService.deleteProduct(id);
+}
 }

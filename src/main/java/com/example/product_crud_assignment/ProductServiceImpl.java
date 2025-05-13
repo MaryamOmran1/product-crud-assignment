@@ -2,9 +2,11 @@ package com.example.product_crud_assignment;
 
 import com.example.product_crud_assignment.Product;
 import com.example.product_crud_assignment.ProductRepository;
+import com.example.product_crud_assignment.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -39,6 +41,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        Product product = getProductById(id);
+        productRepository.delete(product);
     }
 }
